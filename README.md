@@ -96,11 +96,11 @@ causal-credit-risk-bn/
 │
 ├── configs/                 # Cấu hình forbidden_edges, siêu tham số cho từng dataset
 │   ├── australian.yaml
-│   ├── german.yaml
+│   ├── german_credit.yaml
 │   └── lending_club.yaml
 │
 ├── data/
-│   ├── raw/                 # dữ liệu gốc (gitignore)
+│   ├── raw/                 # dữ liệu gốc 
 │  
 │
 ├── notebooks/
@@ -121,7 +121,7 @@ causal-credit-risk-bn/
 ├── models/                   # CPT đã học (.bif/.pkl)
 ├── reports/figures/
 ├── tests/
-└── docs/methodology.md
+
 ```
 
 ---
