@@ -364,15 +364,24 @@ Sau 50 lần chạy, mô hình DAG có điểm BIC cao nhất (ít âm nhất) �
 </p>
 ---
 
-## Roadmap
+## Tổng kết
 
-- [ ] Hoàn thiện pipeline cho **German Credit Data** và **Lending Club 2007–2014** theo cùng kiến trúc `src/causal_credit_bn`.
-- [ ] Nâng cấp từ soft-evidence sang **do-calculus đầy đủ**: xác định backdoor set tường minh, ước lượng $P(Y \mid do(X))$ bằng adjustment formula thay vì posterior update.
-- [ ] Bổ sung ước lượng **ATE/CATE** bằng Double Machine Learning (DML) hoặc Inverse Propensity Weighting (IPW) làm baseline đối chiếu với BN.
-- [ ] Thử nghiệm **PC Algorithm / GES** cho structure learning để so sánh độ ổn định DAG với Hill-Climb + Tabu.
-- [ ] Đóng gói `bn_predict_proba` thành REST API (FastAPI) phục vụ demo credit scoring theo thời gian thực.
-- [ ] Bổ sung kiểm định công bằng thuật toán (Fairness Audit: Demographic Parity, Equal Opportunity) trên các biến bị cấm làm nguyên nhân của `target`.
+- Kết quả thực nghiệm trên ba bộ dữ liệu khẳng định mô hình BN\_Pro kết hợp học cấu trúc bằng BIC-Tabu Search với ràng buộc tri thức chuyên gia, học tham số bằng MLE, suy diễn chính xác bằng VE, và bộ công cụ diễn giải đầy đủ (sensitivity, forward/backward inference, Individual Analysis, what-if) không chỉ cạnh tranh được về độ chính xác dự báo với các mô hình học máy hiện đại trên các bộ dữ liệu quy mô vừa và nhỏ (vượt trội tuyệt đối trên Australian Credit), mà còn cung cấp khả năng diễn giải nhân quả tường minh mà các mô hình khép kín như XGBoost hay Stacking Ensemble không có sẵn.
+
+- Hiệu năng dự báo của BN biến thiên mạnh theo quy mô và độ phức tạp dữ liệu: ROC-AUC tăng từ 0.6910 (Lending Club, 27 biến) lên 0.7667 (German Credit, 15 biến) và đạt đỉnh 0.9220 (Australian Credit, 8 biến), có xu hướng ngược chiều với số lượng đặc trưng đầu vào.
+
+- So với các mô hình học máy hiện đại, BN không phải lúc nào cũng là lựa chọn tối ưu về độ chính xác thuần túy: trên dữ liệu lớn nhiều chiều, các mô hình tổ hợp cây (XGBoost, Random Forest) vượt trội hơn; trên dữ liệu nhỏ, ít chiều, BN có thể vượt qua toàn bộ các mô hình đối chứng kể cả Stacking Ensemble.
+
+- Phân tích DCA xác nhận BN mang lại lợi ích ròng dương và vượt trội hơn các chiến lược biên (Treat All / Treat None) trong vùng ngưỡng xác suất hợp lý trên cả ba bộ dữ liệu, khẳng định giá trị ứng dụng thực tiễn dù chỉ số AUC tuyệt đối có thể thấp hơn các mô hình đối chứng ở một số trường hợp.
+
+- Ưu thế nổi bật và khác biệt của BN so với các mô hình đối chứng là khả năng diễn giải tường minh thông qua cấu trúc đồ thị nhân quả và phân tích độ nhạy xác suất hậu nghiệm — một năng lực mà các mô hình khép kín (Random Forest, XGBoost, mạng nơ-ron) không có sẵn, đòi hỏi phải bổ sung các công cụ diễn giải hậu kỳ riêng biệt (như SHAP, LIME).
+
+- Quá trình tối ưu hóa cấu trúc bằng Tabu Search với 50 lần chạy độc lập cho thấy độ ổn định nghịch biến với số lượng biến: bộ dữ liệu càng nhỏ, không gian cấu trúc càng hẹp, kết quả hội tụ giữa các lần chạy càng nhất quán.
 
 
+## Thành viên
+- Trương Bình Ba
+- Nguyễn Minh Đạt
 ```
+
 
