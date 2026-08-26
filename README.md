@@ -309,7 +309,9 @@ Sau 50 lần chạy, mô hình DAG có điểm BIC cao nhất (ít âm nhất) �
 ### Diagnostic Insight (Backward Inference)
 <p align="center">
     <img width="670" height="727" alt="image" src="https://github.com/user-attachments/assets/e95f9f21-fa06-4a7c-a3f1-b2241ecdd8e3" />
-
+<br>
+</p>
+<p align="center">
     <img width="675" height="730" alt="image" src="https://github.com/user-attachments/assets/607bafdb-bf83-4aff-bbf6-4472ef2777dd" />
 
 <br>
