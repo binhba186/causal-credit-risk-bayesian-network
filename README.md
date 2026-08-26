@@ -176,21 +176,133 @@ Pipeline thực thi tuần tự:
 
 ## Key Results & Practical Insights
 
-> Bảng dưới là khung báo cáo chuẩn — **thay các ô `__` bằng số liệu thực tế đọc từ output notebook của bạn** (Step 4: Prediction Results Comparison) trước khi công bố.
+Cấu hình: 
+\begin{itemize}
+    \item Số lần huấn luyện: N\_RUNS = 50 
+    \item Bộ nhớ Tabu (tabu\_length) = 100 hoạt động như một bộ nhớ ngắn hạn lưu trữ các hành động thêm, xóa, đảo ngược cạnh mà thuật toán vừa mới thực hiện trong 100 bước gần nhất. 
+    \item Bậc vào tối đa mỗi node (max\_indegree) = 5 là số mũi tên tối đa hướng trực tiếp đi vào một nút đồng nghĩa với việc số nút cha tối đa của nút đó, nhằm kiểm soát kích thước bảng CPT.
+    \item Số bước tìm kiếm tối đa mỗi run (max\_iter) = 1000.
+    \item Xác suất sinh cạnh ban đầu (edge\_prob) = 0.3 (đặt xác suất thấp $\leq 0.5$ để tránh đồ thị sinh ra sẽ rất dày đặc, các nút kết nối chằng chịt với nhau làm tăng độ phức tạp của đồ thị. Đối với một đồ thị có hướng không chu trình gồm $n$ nút , số lượng cặp nút có thể thiết lặp liên kết là $M_{max} = \binom{n}{2} = \frac{n(n-1)}{2}$, số lượng cạnh trung bình xuất hiện trên toàn bộ đồ thị sinh ban đầu là 
+    \begin{equation}
+        E(M) = edge\_prob \times M_{max} = edge\_prob \times \frac{n(n-1)}{2}
+    \end{equation}    
+    
+\end{itemize}
 
-### So sánh hiệu năng mô hình (Test set — Australian Credit)
 
-| Model                     | Accuracy | Precision | Recall | F1-Score | ROC-AUC | PR-AUC | Brier Score |
-|---------------------------|:--------:|:---------:|:------:|:--------:|:-------:|:------:|:-----------:|
-| Bayesian Network (ours)   | __       | __        | __     | __       | __      | __     | __          |
-| Logistic Regression       | __       | __        | __     | __       | __      | __     | __          |
-| Random Forest             | __       | __        | __     | __       | __      | __     | __          |
-| XGBoost                   | __       | __        | __     | __       | __      | __     | __          |
-| KNN                       | __       | __        | __     | __       | __      | __     | __          |
-| ANN (MLP)                 | __       | __        | __     | __       | __      | __     | __          |
-| Stacking Ensemble         | __       | __        | __     | __       | __      | __     | __          |
+Sau 50 lần chạy, DAG có điểm BIC cao nhất (ít âm nhất) được chọn làm cấu trúc cuối cùng. Bảng \ref{tab:result_dag} tổng hợp kết quả học cấu trúc trên ba bộ dữ liệu.
+\begin{table}[htbp]
+\centering
+\caption{Kết quả tối ưu cấu trúc DAG bằng thuật toán tìm kiếm Tabu}
+\label{tab:result_dag}
 
-*Ngưỡng phân loại: mặc định 0.5, đối chiếu thêm với ngưỡng tối ưu Youden Index/Closest-(0,1)/Symmetry lấy từ ROC trên tập train.*
+\renewcommand{\arraystretch}{1.3}
+
+\begin{tabular}{|>{\centering\arraybackslash}p{2.3cm}|
+>{\centering\arraybackslash}p{2.2cm}|
+>{\centering\arraybackslash}p{2cm}|
+>{\centering\arraybackslash}p{1.7cm}|
+>{\centering\arraybackslash}p{2cm}|
+>{\centering\arraybackslash}p{3.8cm}|}
+\hline
+
+\rowcolor{gray!20}
+\textcolor{black}{\textbf{Bộ dữ liệu}} &
+\textcolor{black}{\textbf{BIC tốt nhất}} &
+\textcolor{black}{\textbf{Run tốt nhất}} &
+\textcolor{black}{\textbf{Số node}} &
+\textcolor{black}{\textbf{Số cạnh}} &
+\textcolor{black}{\textbf{Dao động BIC giữa các run}} \\
+
+\hline
+
+Australian Credit
+& -3343.32
+& 15
+& 9
+& 10 
+& $\approx$ 44 đơn vị 
+
+(-3387 → -3343)\\
+
+\hline
+
+German Credit
+& -14755.32
+& 20
+& 16
+& 18 
+& $\approx$ 114 đơn vị 
+
+(-14869 → -14755)\\
+
+\hline
+
+Lending Club
+& -725970.15
+& 14
+& 28
+& 58 
+& $\approx$ 3.500 đơn vị 
+
+(-729492 → -725970)\\
+
+\hline
+\end{tabular}
+\end{table} 
+
+% ==========================================
+% KHỐI HÌNH 1: Chứa Australian và German
+% ==========================================
+\begin{figure}[H]
+    \centering
+
+     % --- HÀNG 1: Australian Credit ---
+    \begin{subfigure}[b]{0.8\textwidth} % Giảm nhẹ xuống 0.8 để 2 hình chắc chắn vừa 1 trang
+        \centering
+        \includegraphics[width=\textwidth,
+        height=0.35\textheight,
+        trim=2.5cm 2.5cm 2cm 2cm,
+        clip]{image/network/graph_au.pdf}
+        \caption{Sơ đồ cấu trúc mạng Bayes Australian Credit dataset}
+        \label{fig:net_aus}
+    \end{subfigure}
+    
+    \vspace{0.8cm} % Tăng khoảng cách cho thoáng mắt
+    % --- HÀNG 1: German Credit ---
+    \begin{subfigure}[b]{0.9\textwidth}
+        \centering
+        \includegraphics[width=1.1\textwidth,
+        height=0.5\textheight,
+        trim=2.5cm 0.5cm 2cm 3.5cm,
+        clip]{image/network/graph_ger.pdf}
+        \caption{Sơ đồ cấu trúc mạng Bayes German Credit dataset}
+        \label{fig:net_ger}
+    \end{subfigure}
+
+    \caption{Sơ đồ cấu trúc mạng Bayes (Phần 1)}
+\end{figure}
+
+\begin{figure}[H]
+    \ContinuedFloat % <-- Lệnh quan trọng giúp giữ nguyên số thứ tự Hình (vd: vẫn là Hình 4.5)
+    \centering
+    
+    % --- HÀNG 3: Lending Credit ---
+    \begin{subfigure}[b]{1\textwidth}
+         \includegraphics[angle=90,
+         width=1.05\textwidth,
+        height=1    \textheight,
+        trim=0.5cm 0cm 1cm 0.95cm,
+        clip]{image/network/graph_lend.pdf}
+        \caption{Sơ đồ cấu trúc mạng Bayes Lending Club dataset}
+        \label{fig:net_lc}
+    \end{subfigure}
+    
+    \caption{Sơ đồ cấu trúc mạng Bayes (tiếp theo).}
+    \label{fig:net}
+\end{figure}
+
+\FloatBarrier
 
 ### Ví dụ phân tích What-if (Counterfactual-style Intervention)
 
