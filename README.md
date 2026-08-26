@@ -249,7 +249,7 @@ Sau 50 lần chạy, mô hình DAG có điểm BIC cao nhất (ít âm nhất) �
 </p>
 
 <p align="center">
-<img width="1081" height="1347" alt="image" src="https://github.com/user-attachments/assets/7a3ab662-ff7f-478a-ae8f-1845aec36135" />
+<img width="1081" height="1847" alt="image" src="https://github.com/user-attachments/assets/7a3ab662-ff7f-478a-ae8f-1845aec36135" />
 <br>
   <em></b> Phân phối xác suất của toàn mạng --- Lending Club</em>
 </p>
@@ -307,9 +307,9 @@ Sau 50 lần chạy, mô hình DAG có điểm BIC cao nhất (ít âm nhất) �
 <img width="1055" height="654" alt="image" src="https://github.com/user-attachments/assets/39ecaa45-7c63-4153-b493-1efec1f54622" />
 
 ### Diagnostic Insight (Backward Inference)
-<img width="670" height="727" alt="image" src="https://github.com/user-attachments/assets/e95f9f21-fa06-4a7c-a3f1-b2241ecdd8e3" />
-
 <p align="center">
+    <img width="670" height="727" alt="image" src="https://github.com/user-attachments/assets/e95f9f21-fa06-4a7c-a3f1-b2241ecdd8e3" />
+
     <img width="675" height="730" alt="image" src="https://github.com/user-attachments/assets/607bafdb-bf83-4aff-bbf6-4472ef2777dd" />
 
 <br>
