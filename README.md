@@ -176,146 +176,91 @@ Pipeline thực thi tuần tự:
 
 ## Key Results & Practical Insights
 
-Cấu hình: 
-\begin{itemize}
-    \item Số lần huấn luyện: N\_RUNS = 50 
-    \item Bộ nhớ Tabu (tabu\_length) = 100 hoạt động như một bộ nhớ ngắn hạn lưu trữ các hành động thêm, xóa, đảo ngược cạnh mà thuật toán vừa mới thực hiện trong 100 bước gần nhất. 
-    \item Bậc vào tối đa mỗi node (max\_indegree) = 5 là số mũi tên tối đa hướng trực tiếp đi vào một nút đồng nghĩa với việc số nút cha tối đa của nút đó, nhằm kiểm soát kích thước bảng CPT.
-    \item Số bước tìm kiếm tối đa mỗi run (max\_iter) = 1000.
-    \item Xác suất sinh cạnh ban đầu (edge\_prob) = 0.3 (đặt xác suất thấp $\leq 0.5$ để tránh đồ thị sinh ra sẽ rất dày đặc, các nút kết nối chằng chịt với nhau làm tăng độ phức tạp của đồ thị. Đối với một đồ thị có hướng không chu trình gồm $n$ nút , số lượng cặp nút có thể thiết lặp liên kết là $M_{max} = \binom{n}{2} = \frac{n(n-1)}{2}$, số lượng cạnh trung bình xuất hiện trên toàn bộ đồ thị sinh ban đầu là 
-    \begin{equation}
-        E(M) = edge\_prob \times M_{max} = edge\_prob \times \frac{n(n-1)}{2}
-    \end{equation}    
-    
-\end{itemize}
+### Cấu hình Thuật toán Tối ưu Cấu trúc (Tabu Search)
+
+* **Số lần huấn luyện (`N_RUNS`):** `50`
+* **Bộ nhớ Tabu (`tabu_length`):** `100` – Hoạt động như một bộ nhớ ngắn hạn lưu trữ các hành động thêm, xóa, đảo ngược cạnh mà thuật toán vừa thực hiện trong 100 bước gần nhất.
+* **Bậc vào tối đa mỗi node (`max_indegree`):** `5` – Số mũi tên tối đa hướng trực tiếp đi vào một nút (tương ứng số nút cha tối đa), giúp kiểm soát kích thước bảng CPT.
+* **Số bước tìm kiếm tối đa mỗi run (`max_iter`):** `1000`.
+* **Xác suất sinh cạnh ban đầu (`edge_prob`):** `0.3` – Đặt xác suất thấp ($\leq 0.5$) để tránh đồ thị sinh ra quá dày đặc, làm tăng độ phức tạp. Đối với đồ thị có hướng không chu trình (DAG) gồm $n$ nút, số lượng cặp nút tối đa có thể thiết lập liên kết là $M_{\text{max}} = \binom{n}{2} = \frac{n(n-1)}{2}$. Số lượng cạnh trung bình xuất hiện trên đồ thị ban đầu được tính bằng:
+
+$$E(M) = \text{edge\_prob} \times M_{\text{max}} = \text{edge\_prob} \times \frac{n(n-1)}{2}$$
+
+---
+
+### Kết quả Học Cấu trúc DAG
+
+Sau 50 lần chạy, mô hình DAG có điểm BIC cao nhất (ít âm nhất) được chọn làm cấu trúc cuối cùng.
+
+**Bảng kết quả tối ưu cấu trúc DAG bằng thuật toán Tabu Search**
+
+| Bộ dữ liệu | BIC tốt nhất | Run tốt nhất | Số node | Số cạnh | Dao động BIC giữa các run |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| **Australian Credit** | -3,343.32 | 15 | 9 | 10 | $\approx 44$ đơn vị (-3387 $\rightarrow$ -3343) |
+| **German Credit** | -14,755.32 | 20 | 16 | 18 | $\approx 114$ đơn vị (-14869 $\rightarrow$ -14755) |
+| **Lending Club** | -725,970.15 | 14 | 28 | 58 | $\approx 3,500$ đơn vị (-729492 $\rightarrow$ -725970) |
+
+---
+<p align="center">
+    <img width="850" height="652" alt="image" src="https://github.com/user-attachments/assets/ea4ed19b-b83e-4788-a0d3-545aaecaf7b0" />
+<br>
+  <em></b> Sơ đồ cấu trúc mạng Bayes Australian Credit dataset</em>
+</p>
+
+<p align="center">
+<img width="1042" height="808" alt="image" src="https://github.com/user-attachments/assets/a35a7ffb-b188-4802-a9c0-eca2a7bbe5b8" />
+<br>
+  <em></b> Sơ đồ cấu trúc mạng Bayes German Credit dataset</em>
+</p>
+
+<p align="center">
+<img width="1081" height="847" alt="image" src="https://github.com/user-attachments/assets/597da165-fee9-4d92-9c9e-2d03cbdece17" />
+<br>
+  <em></b> Sơ đồ cấu trúc mạng Bayes Lending Club dataset</em>
+</p>
+
+### Đánh giá Mô hình trên Tập Huấn luyện (Train) và Kiểm tra (Test)
+
+**Bảng tổng hợp chỉ số đánh giá mô hình Mạng Bayes (Bayesian Network)**
+
+| Chỉ số | Lending Club (Train) | Lending Club (Test) | German Credit (Train) | German Credit (Test) | Australian Credit (Train) | Australian Credit (Test) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Accuracy** | 0.7085 | 0.6808 | 0.7811 | 0.7300 | 0.8641 | 0.8406 |
+| **Precision** | 0.7269 | 0.4610 | 0.8386 | 0.6047 | 0.9247 | 0.9211 |
+| **Recall** | 0.6679 | 0.4878 | 0.6962 | 0.4127 | 0.7926 | 0.8140 |
+| **Specificity** | 0.7490 | 0.7615 | 0.8660 | 0.8759 | 0.9355 | 0.8846 |
+| **F1-Score** | 0.7034 | 0.4740 | 0.7608 | 0.4906 | 0.8536 | 0.8642 |
+| **ROC-AUC** | 0.7944 | 0.6910 | 0.8686 | 0.7667 | 0.9278 | 0.9220 |
+| **PR-AUC** | 0.8238 | 0.5224 | 0.8886 | 0.5421 | 0.9070 | 0.9371 |
 
 
-Sau 50 lần chạy, DAG có điểm BIC cao nhất (ít âm nhất) được chọn làm cấu trúc cuối cùng. Bảng \ref{tab:result_dag} tổng hợp kết quả học cấu trúc trên ba bộ dữ liệu.
-\begin{table}[htbp]
-\centering
-\caption{Kết quả tối ưu cấu trúc DAG bằng thuật toán tìm kiếm Tabu}
-\label{tab:result_dag}
+#### Phân tích Đường cong ROC, Ngưỡng Tối ưu và Decision Curve Analysis (DCA) — Australian Credit
 
-\renewcommand{\arraystretch}{1.3}
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d9ed8276-dc27-47ad-95e5-637ff3252a8d" alt="ROC Curve Australian Credit" width="75%">
+  <br>
+  <em>Đồ thị ba ngưỡng quyết định tối ưu theo ROC — Australian Credit</em>
+</p>
 
-\begin{tabular}{|>{\centering\arraybackslash}p{2.3cm}|
->{\centering\arraybackslash}p{2.2cm}|
->{\centering\arraybackslash}p{2cm}|
->{\centering\arraybackslash}p{1.7cm}|
->{\centering\arraybackslash}p{2cm}|
->{\centering\arraybackslash}p{3.8cm}|}
-\hline
+<p align="center">
+  <img src="[image/roc_dca/dca_au.png](https://github.com/user-attachments/assets/08401c18-c7ce-4780-a9eb-4d574e90a8be)" alt="DCA Curve Australian Credit" width="75%">
+  <br>
+  <em>Đồ thị ba ngưỡng quyết định tối ưu trên DCA — Australian Credit</em>
+</p>
 
-\rowcolor{gray!20}
-\textcolor{black}{\textbf{Bộ dữ liệu}} &
-\textcolor{black}{\textbf{BIC tốt nhất}} &
-\textcolor{black}{\textbf{Run tốt nhất}} &
-\textcolor{black}{\textbf{Số node}} &
-\textcolor{black}{\textbf{Số cạnh}} &
-\textcolor{black}{\textbf{Dao động BIC giữa các run}} \\
 
-\hline
+---
 
-Australian Credit
-& -3343.32
-& 15
-& 9
-& 10 
-& $\approx$ 44 đơn vị 
+**Bảng ba ngưỡng quyết định tối ưu theo ROC — Australian Credit (Tập Validation)**
 
-(-3387 → -3343)\\
+| Tiêu chí ngưỡng | Ngưỡng ($c$) | Sensitivity | Specificity | Accuracy | F1-Score |
+| :--- | :---: | :---: | :---: | :---: | :---: |
+| **Youden Index** | 0.4254 | 0.8125 | 0.9138 | 0.8551 | 0.8667 |
+| **Closest to (0,1)** | 0.4052 | 0.8125 | 0.9138 | 0.8551 | 0.8667 |
+| **Symmetry Point** | 0.3818 | 0.9250 | 0.7241 | 0.8406 | 0.8706 |
 
-\hline
+> **Đánh giá DCA:** Với tỷ lệ lưu hành (prevalence) = 0.5797, ngưỡng **Symmetry Point** ($c_S = 0.3818$) mang lại Lợi ích ròng (Net Benefit) cao nhất trong ba ngưỡng với $\text{NB} = 0.4661$, vượt trội so với chiến lược chấp thuận toàn bộ (Treat All) **0.1459 điểm**.
 
-German Credit
-& -14755.32
-& 20
-& 16
-& 18 
-& $\approx$ 114 đơn vị 
-
-(-14869 → -14755)\\
-
-\hline
-
-Lending Club
-& -725970.15
-& 14
-& 28
-& 58 
-& $\approx$ 3.500 đơn vị 
-
-(-729492 → -725970)\\
-
-\hline
-\end{tabular}
-\end{table} 
-
-% ==========================================
-% KHỐI HÌNH 1: Chứa Australian và German
-% ==========================================
-\begin{figure}[H]
-    \centering
-
-     % --- HÀNG 1: Australian Credit ---
-    \begin{subfigure}[b]{0.8\textwidth} % Giảm nhẹ xuống 0.8 để 2 hình chắc chắn vừa 1 trang
-        \centering
-        \includegraphics[width=\textwidth,
-        height=0.35\textheight,
-        trim=2.5cm 2.5cm 2cm 2cm,
-        clip]{image/network/graph_au.pdf}
-        \caption{Sơ đồ cấu trúc mạng Bayes Australian Credit dataset}
-        \label{fig:net_aus}
-    \end{subfigure}
-    
-    \vspace{0.8cm} % Tăng khoảng cách cho thoáng mắt
-    % --- HÀNG 1: German Credit ---
-    \begin{subfigure}[b]{0.9\textwidth}
-        \centering
-        \includegraphics[width=1.1\textwidth,
-        height=0.5\textheight,
-        trim=2.5cm 0.5cm 2cm 3.5cm,
-        clip]{image/network/graph_ger.pdf}
-        \caption{Sơ đồ cấu trúc mạng Bayes German Credit dataset}
-        \label{fig:net_ger}
-    \end{subfigure}
-
-    \caption{Sơ đồ cấu trúc mạng Bayes (Phần 1)}
-\end{figure}
-
-\begin{figure}[H]
-    \ContinuedFloat % <-- Lệnh quan trọng giúp giữ nguyên số thứ tự Hình (vd: vẫn là Hình 4.5)
-    \centering
-    
-    % --- HÀNG 3: Lending Credit ---
-    \begin{subfigure}[b]{1\textwidth}
-         \includegraphics[angle=90,
-         width=1.05\textwidth,
-        height=1    \textheight,
-        trim=0.5cm 0cm 1cm 0.95cm,
-        clip]{image/network/graph_lend.pdf}
-        \caption{Sơ đồ cấu trúc mạng Bayes Lending Club dataset}
-        \label{fig:net_lc}
-    \end{subfigure}
-    
-    \caption{Sơ đồ cấu trúc mạng Bayes (tiếp theo).}
-    \label{fig:net}
-\end{figure}
-
-\FloatBarrier
-
-### Ví dụ phân tích What-if (Counterfactual-style Intervention)
-
-Giả sử hồ sơ vay $P_0$ có `Income = bin thấp nhất`, `CreditHistory = 0 (chưa có lịch sử tốt)`, cho kết quả baseline $P(default=1 \mid P_0) = \_\_.\_\_$.
-
-| Kịch bản can thiệp                          | $P(default=1)$ mới | $\Delta P$ |
-|----------------------------------------------|:-------------------:|:----------:|
-| Baseline                                      | __                  | —          |
-| `Income` → bin cao hơn 1 bậc                  | __                  | __         |
-| `CreditHistory` → 1 (có lịch sử tín dụng tốt) | __                  | __         |
-| Cả hai đồng thời                              | __                  | __         |
-
-**Ý nghĩa thực tiễn**: Kết quả này gợi ý ngân hàng có thể thiết kế **chương trình cải thiện điểm tín dụng có mục tiêu** (targeted credit-improvement program) thay vì từ chối tuyệt đối — ví dụ đề xuất khách hàng xây dựng lịch sử tín dụng qua sản phẩm thẻ tín dụng đảm bảo (secured card) trước khi tái xét hồ sơ vay lớn.
 
 ### Diagnostic Insight (Backward Inference)
 
