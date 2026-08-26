@@ -294,11 +294,11 @@ Sau 50 lần chạy, mô hình DAG có điểm BIC cao nhất (ít âm nhất) �
 
 ### So sánh mạng Bayes với các mô hình máy học đối chứng
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/ecd3a944-bf26-4337-9c6e-253dbbac2799" alt="all model German Credit" width="75%">
+  <img width="2316" height="1751" alt="auc_ger" src="https://github.com/user-attachments/assets/ecd3a944-bf26-4337-9c6e-253dbbac2799" />
   <br>
   <em>So sánh hiệu năng của mô hình mạng Bayes với các mô hình máy học trên bộ dữ liệu German Credit</em>
 </p>
-<img width="2316" height="1751" alt="auc_ger" src="https://github.com/user-attachments/assets/ecd3a944-bf26-4337-9c6e-253dbbac2799" />
+
 
 ### Sensitivity analysis
 <img width="632" height="862" alt="image" src="https://github.com/user-attachments/assets/e6e5755e-cbc2-4cba-bbeb-683d1b614f62" />
