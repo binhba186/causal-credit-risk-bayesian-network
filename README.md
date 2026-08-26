@@ -1,5 +1,4 @@
 # causal-credit-risk-bayesian-network
 
-<p align="center">
-  <img src="binhba186/causal-credit-risk-bn-scaffold/reports/figures/subgraph/au_back.pdf" alt="Causal DAG Model" width="80%">
-</p>
+<img width="1087" height="625" alt="image" src="https://github.com/user-attachments/assets/94241e0e-293e-4cdd-b77c-b4923455359a" />
+
