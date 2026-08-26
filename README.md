@@ -282,11 +282,84 @@ Sau 50 lần chạy, mô hình DAG có điểm BIC cao nhất (ít âm nhất) �
 
 > **Đánh giá DCA:** Với tỷ lệ lưu hành (prevalence) = 0.5797, ngưỡng **Symmetry Point** ($c_S = 0.3818$) mang lại Lợi ích ròng (Net Benefit) cao nhất trong ba ngưỡng với $\text{NB} = 0.4661$, vượt trội so với chiến lược chấp thuận toàn bộ (Treat All) **0.1459 điểm**.
 
+**So sánh chỉ số đánh giá mô hình Mạng Bayes với ngưỡng tối ưu trên tập Test**
+
+| Chỉ số | Australian ($c=0.5$) | Australian ($c^*=0.3818$) | German ($c=0.5$) | German ($c^*=0.1895$) | Lending Club ($c=0.5$) | Lending Club ($c^*=0.3593$) |
+| :--- | :---: | :---: | :---: | :---: | :---: | :---: |
+| **Accuracy** | 0.8406 | **0.8551** | **0.7300** | 0.6750 | **0.6808** | 0.5897 |
+| **Precision** | **0.9211** | 0.8367 | **0.6047** | 0.4891 | **0.4610** | 0.3926 |
+| **Recall** | 0.8140 | **0.9535** | 0.4127 | **0.7143** | 0.4878 | **0.7157** |
+| **Specificity** | **0.8846** | 0.6923 | **0.8759** | 0.6569 | **0.7615** | 0.5370 |
+| **F1-Score** | 0.8642 | **0.8913** | 0.4906 | **0.5806** | 0.4740 | **0.5070** |
+
+### So sánh mạng Bayes với các mô hình máy học đối chứng
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/ecd3a944-bf26-4337-9c6e-253dbbac2799" alt="all model German Credit" width="75%">
+  <br>
+  <em>So sánh hiệu năng của mô hình mạng Bayes với các mô hình máy học trên bộ dữ liệu German Credit</em>
+</p>
+<img width="2316" height="1751" alt="auc_ger" src="https://github.com/user-attachments/assets/ecd3a944-bf26-4337-9c6e-253dbbac2799" />
+
+### Sensitivity analysis
+<img width="632" height="862" alt="image" src="https://github.com/user-attachments/assets/e6e5755e-cbc2-4cba-bbeb-683d1b614f62" />
+
+### Forward Inference
+<img width="1055" height="654" alt="image" src="https://github.com/user-attachments/assets/39ecaa45-7c63-4153-b493-1efec1f54622" />
 
 ### Diagnostic Insight (Backward Inference)
 
-So sánh $P(X_i \mid Y{=}1)$ với $P(X_i \mid Y{=}0)$ và Likelihood Ratio giúp xác định **risk discriminator** hàng đầu — điền top-3 biến có $LR$ lệch xa nhất khỏi 1.0 từ output Step 7 vào đây để làm executive takeaway.
+<img width="687" height="731" alt="image" src="https://github.com/user-attachments/assets/d75c3dbd-f967-4259-a582-a3aea22b7d45" />
 
+<p align="center">
+    <img width="687" height="753" alt="image" src="https://github.com/user-attachments/assets/64a07fe0-a7d1-4db9-84cc-ff758201d1c8" />
+<br>
+  <em></b>  Suy luận lùi toàn cục theo evidence target — German Credit </em>
+</p>
+
+
+### Phân tích kịch bản giả định (what-if)
+<p align="center">
+    <img width="1037" height="742" alt="image" src="https://github.com/user-attachments/assets/d51238d2-e499-4655-8da6-eab98588eb6a" />
+<br>
+  <em></b>  Phân tích kịch bản giả định theo hồ sơ cá nhân --- Australian Credit {\newline \small (Trong đó, màu xanh: target = 0 và màu đỏ: target = 1})</em>
+</p>
+
+<p align="center"><b>CPT của target theo Employed × Income — Australian Credit</b></p>
+
+<table align="center">
+  <thead>
+    <tr>
+      <th><b>Employed</b></th>
+      <th>0</th><th>0</th><th>0</th><th>0</th>
+      <th>1</th><th>1</th><th>1</th><th>1</th>
+    </tr>
+    <tr>
+      <th><b>Income</b></th>
+      <th>0</th><th>1</th><th>2</th><th>3</th>
+      <th>0</th><th>1</th><th>2</th><th>3</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>P(target=1)</b></td>
+      <td>0.7190</td><td>0.7474</td><td>0.7871</td><td>0.6174</td>
+      <td>0.2455</td><td>0.6606</td><td>0.3026</td><td>0.0441</td>
+    </tr>
+    <tr>
+      <td><b>P(target=0)</b></td>
+      <td>0.2810</td><td>0.2526</td><td>0.2129</td><td>0.3826</td>
+      <td>0.7545</td><td>0.3394</td><td>0.6974</td><td>0.9559</td>
+    </tr>
+  </tbody>
+</table>
+
+### Đối chiếu với công cụ diễn giải hậu kỳ riêng biệt (như SHAP, LIME)
+
+<p align="center">
+    <img width="770" height="862" alt="image" src="https://github.com/user-attachments/assets/72fd8b50-afe2-4e29-8595-c272aa00d78c" />
+<br>
+  <em></b>   So sánh ba phương pháp giải thích cục bộ cho một hồ sơ khách hàng ngẫu nhiên — German Credit</em>
+</p>
 ---
 
 ## Roadmap
