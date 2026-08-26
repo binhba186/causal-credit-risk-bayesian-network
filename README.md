@@ -185,7 +185,7 @@ Pipeline thực thi tuần tự:
 * **Xác suất sinh cạnh ban đầu (`edge_prob`):** `0.3` – Đặt xác suất thấp ($\leq 0.5$) để tránh đồ thị sinh ra quá dày đặc, làm tăng độ phức tạp. Đối với đồ thị có hướng không chu trình (DAG) gồm $n$ nút, số lượng cặp nút tối đa có thể thiết lập liên kết là $M_{\text{max}} = \binom{n}{2} = \frac{n(n-1)}{2}$. Số lượng cạnh trung bình xuất hiện trên đồ thị ban đầu được tính bằng:
 
 $$
-E(M) = \text{edge\_prob} \times M_{\text{max}} = \text{edge\_prob} \times \frac{n(n-1)}{2}
+E(M) = \text{edge\\_prob} \times M_{\text{max}} = \text{edge\\_prob} \times \frac{n(n-1)}{2}
 $$
 
 ---
