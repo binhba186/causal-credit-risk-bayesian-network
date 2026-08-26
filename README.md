@@ -1,24 +1,14 @@
-# causal-credit-risk-bayesian-network
-
-# 🔗 Causal-BN Credit Risk — Bayesian Network cho Đánh giá Rủi ro Tín dụng & Phân tích Can thiệp
+#  Causal-BN Credit Risk — Bayesian Network cho Đánh giá Rủi ro Tín dụng & Phân tích Can thiệp
 
 > **"Từ tương quan đến nguyên nhân: mô hình hóa rủi ro vỡ nợ bằng cấu trúc nhân quả tường minh, không chỉ dự đoán mà còn giải thích *tại sao* và *nếu-thì*."**
 
-[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python)](https://www.python.org/)
-[![Framework](https://img.shields.io/badge/Causal%20Framework-pgmpy%20%7C%20Bayesian%20Network-orange)](https://pgmpy.org/)
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
-[![Status](https://img.shields.io/badge/Status-Research%20Prototype-yellow)]()
-[![Datasets](https://img.shields.io/badge/Datasets-Australian%20%7C%20German%20%7C%20Lending%20Club-lightgrey)]()
-
----
-
-## 📌 Executive Summary
+## Executive Summary
 
 ### Bài toán
 Các mô hình chấm điểm tín dụng (credit scoring) truyền thống — Logistic Regression, Random Forest, XGBoost — tối ưu hóa khả năng **dự đoán** `P(default | X)` dựa trên tương quan thống kê giữa đặc trưng và biến mục tiêu. Điều này tạo ra hai rủi ro nghiêm trọng trong thực tế vận hành:
 
-1. **Spurious Correlation (Tương quan giả)**: Một mô hình ML thuần túy có thể học được rằng `Ethnicity` hay `Gender` có tương quan với `default`, không phải vì có quan hệ nhân quả, mà vì các biến này cùng chịu ảnh hưởng bởi một biến ẩn khác (ví dụ: khu vực địa lý, nhóm nghề nghiệp lịch sử). Dùng trực tiếp tương quan này để ra quyết định tín dụng dẫn đến **thiên vị thuật toán (algorithmic bias)** và vi phạm các quy định công bằng tín dụng (Fair Lending, ECOA).
-2. **Không hỗ trợ ra quyết định can thiệp (Actionability Gap)**: Câu hỏi kinh doanh thực sự không phải là "*mô hình dự đoán gì?*" mà là "*nếu tôi tăng hạn mức, giảm lãi suất, hoặc yêu cầu thêm tài sản đảm bảo, xác suất vỡ nợ thay đổi ra sao?*". Một bộ phân loại correlation-based **không thể trả lời câu hỏi can thiệp (interventional question)** này một cách nhất quán, vì nó không phân biệt được đâu là nguyên nhân, đâu là hệ quả, đâu là confounder.
+1. **Spurious Correlation (Tương quan giả)**: Một mô hình ML thuần túy có thể học được rằng `Ethnicity` hay `Gender` có tương quan với `default`, không phải vì có quan hệ nhân quả, mà vì các biến này cùng chịu ảnh hưởng bởi một biến ẩn khác (ví dụ: khu vực địa lý, nhóm nghề nghiệp lịch sử). Dùng trực tiếp tương quan này để ra quyết định tín dụng dẫn đến thiên vị thuật toán (algorithmic bias) và vi phạm các quy định công bằng tín dụng (Fair Lending, ECOA).
+2. **Không hỗ trợ ra quyết định can thiệp (Actionability Gap)**: Câu hỏi kinh doanh thực sự không phải là "*mô hình dự đoán gì?*" mà là "*nếu tôi tăng hạn mức, giảm lãi suất, hoặc yêu cầu thêm tài sản đảm bảo, xác suất vỡ nợ thay đổi ra sao?*". Một bộ phân loại correlation-based không thể trả lời câu hỏi can thiệp (interventional question) này một cách nhất quán, vì nó không phân biệt được đâu là nguyên nhân, đâu là hệ quả, đâu là confounder.
 
 ### Giải pháp: Causal-Inspired Bayesian Network
 Dự án xây dựng một **Discrete Bayesian Network (BN)** trong đó cấu trúc đồ thị (DAG) được ràng buộc bởi **tri thức chuyên gia (expert knowledge)** — cấm các cạnh phi lý về mặt nhân quả (ví dụ: `target → Gender`, `target → Age`, `target → CreditHistory`) — nhằm buộc thuật toán học cấu trúc chỉ tìm các quan hệ có hướng **hợp lý về mặt nhân quả** (đặc trưng nhân khẩu học/tài chính là nguyên nhân tiềm năng dẫn đến default, không phải ngược lại). Trên nền tảng đó, hệ thống hỗ trợ:
@@ -27,11 +17,11 @@ Dự án xây dựng một **Discrete Bayesian Network (BN)** trong đó cấu t
 - **Suy diễn ngược (Backward/Diagnostic Inference)**: `P(feature | default = 1)` — tìm đặc điểm điển hình của nhóm vỡ nợ.
 - **Phân tích kịch bản giả định (What-if / Soft Intervention)**: mô phỏng thay đổi từng đặc trưng và đo lường ΔP(default) tương ứng — nền tảng cho các đề xuất chính sách tín dụng.
 
-> ⚠️ **Minh bạch về giới hạn phương pháp**: Bayesian Network trong dự án này thực hiện suy diễn qua **posterior update / soft evidence** bằng thuật toán Variable Elimination, **không phải do-calculus đầy đủ theo nghĩa Pearl** (`P(Y | do(X))`). DAG được ràng buộc bởi tri thức miền để phản ánh hướng nhân quả hợp lý, nhưng chưa xử lý confounding ẩn bằng backdoor/frontdoor adjustment hay ước lượng ATE/CATE dạng đóng (closed-form). Đây là điểm khác biệt quan trọng cần nêu rõ khi trình bày kết quả, và cũng là hướng mở rộng chính trong Roadmap.
+ **Minh bạch về giới hạn phương pháp**: Bayesian Network trong dự án này thực hiện suy diễn qua **posterior update / soft evidence** bằng thuật toán Variable Elimination, **không phải do-calculus đầy đủ theo nghĩa Pearl** (`P(Y | do(X))`). DAG được ràng buộc bởi tri thức miền để phản ánh hướng nhân quả hợp lý, nhưng chưa xử lý confounding ẩn bằng backdoor/frontdoor adjustment hay ước lượng ATE/CATE dạng đóng (closed-form). Đây là điểm khác biệt quan trọng cần nêu rõ khi trình bày kết quả, và cũng là hướng mở rộng chính trong Roadmap.
 
 ---
 
-## 🧠 Core Methodology
+## Core Methodology
 
 ### 1. Structural Bayesian Network như một xấp xỉ Causal DAG
 
@@ -95,7 +85,7 @@ $LR > 1$: trạng thái $s$ xuất hiện nhiều hơn ở nhóm vỡ nợ → c
 
 ---
 
-## 🏗️ Project Architecture
+## Project Architecture
 
 ```
 causal-credit-risk-bn/
@@ -111,13 +101,13 @@ causal-credit-risk-bn/
 │
 ├── data/
 │   ├── raw/                 # dữ liệu gốc (gitignore)
-│   ├── interim/             # sau SMOTE/discretize (gitignore)
-│   └── processed/           # bin_labels_map, feature lists
+│  
 │
 ├── notebooks/
-│   ├── 01_australian_credit_bn.ipynb   # ✅ đã có
-│   ├── 02_german_credit_bn.ipynb       # 🔜
-│   └── 03_lending_club_bn.ipynb        # 🔜
+│   ├── australian_credit_bn.ipynb  
+│   ├── german_credit_bn.ipynb       
+│   └── lending_club_bn.ipynb
+
 │
 ├── src/causal_credit_bn/
 │   ├── preprocessing.py      # SMOTE-NC, Lasso-Stability, IV/WOE, K-Means discretization
@@ -128,7 +118,7 @@ causal-credit-risk-bn/
 │   ├── explain.py            # LIME / SHAP wrapper cho bn_predict_proba
 │   └── visualization.py      # Vẽ DAG (circular/target-centered), sensitivity chart
 │
-├── models/                   # CPT đã học (.bif/.pkl) — không commit file nặng
+├── models/                   # CPT đã học (.bif/.pkl)
 ├── reports/figures/
 ├── tests/
 └── docs/methodology.md
@@ -136,15 +126,15 @@ causal-credit-risk-bn/
 
 ---
 
-## ⚙️ Installation & Quick Start
+## Installation & Quick Start
 
 ### 1. Cài đặt môi trường
 ```bash
-git clone https://github.com/<your-username>/causal-credit-risk-bn.git
+git clone https://github.com/<binhba186>/causal-credit-risk-bayesian-network.git
 cd causal-credit-risk-bn
 
 python -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
+source .venv/bin/activate       
 
 pip install -r requirements.txt
 ```
@@ -184,7 +174,7 @@ Pipeline thực thi tuần tự:
 
 ---
 
-## 📊 Key Results & Practical Insights
+## Key Results & Practical Insights
 
 > Bảng dưới là khung báo cáo chuẩn — **thay các ô `__` bằng số liệu thực tế đọc từ output notebook của bạn** (Step 4: Prediction Results Comparison) trước khi công bố.
 
@@ -221,7 +211,7 @@ So sánh $P(X_i \mid Y{=}1)$ với $P(X_i \mid Y{=}0)$ và Likelihood Ratio giú
 
 ---
 
-## 🗺️ Roadmap
+## Roadmap
 
 - [ ] Hoàn thiện pipeline cho **German Credit Data** và **Lending Club 2007–2014** theo cùng kiến trúc `src/causal_credit_bn`.
 - [ ] Nâng cấp từ soft-evidence sang **do-calculus đầy đủ**: xác định backdoor set tường minh, ước lượng $P(Y \mid do(X))$ bằng adjustment formula thay vì posterior update.
@@ -230,21 +220,6 @@ So sánh $P(X_i \mid Y{=}1)$ với $P(X_i \mid Y{=}0)$ và Likelihood Ratio giú
 - [ ] Đóng gói `bn_predict_proba` thành REST API (FastAPI) phục vụ demo credit scoring theo thời gian thực.
 - [ ] Bổ sung kiểm định công bằng thuật toán (Fairness Audit: Demographic Parity, Equal Opportunity) trên các biến bị cấm làm nguyên nhân của `target`.
 
-## 📖 Citation
 
-Nếu bạn sử dụng dự án này trong nghiên cứu hoặc sản phẩm, vui lòng trích dẫn:
-
-```bibtex
-@software{causal_credit_bn_2026,
-  author    = {<Tên tác giả>},
-  title     = {Causal-BN Credit Risk: Bayesian Network for Credit Risk Assessment and Policy Intervention},
-  year      = {2026},
-  url       = {https://github.com/<your-username>/causal-credit-risk-bn},
-  note      = {Datasets: UCI Statlog Australian Credit Approval, UCI Statlog German Credit, LendingClub Loan Data 2007-2014}
-}
 ```
-
-## 📄 License
-
-Phân phối theo giấy phép [MIT](LICENSE). Dữ liệu gốc (UCI, LendingClub) tuân theo điều khoản sử dụng riêng của từng nguồn — không đi kèm trong repository này.
 
