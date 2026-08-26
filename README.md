@@ -184,7 +184,9 @@ Pipeline thực thi tuần tự:
 * **Số bước tìm kiếm tối đa mỗi run (`max_iter`):** `1000`.
 * **Xác suất sinh cạnh ban đầu (`edge_prob`):** `0.3` – Đặt xác suất thấp ($\leq 0.5$) để tránh đồ thị sinh ra quá dày đặc, làm tăng độ phức tạp. Đối với đồ thị có hướng không chu trình (DAG) gồm $n$ nút, số lượng cặp nút tối đa có thể thiết lập liên kết là $M_{\text{max}} = \binom{n}{2} = \frac{n(n-1)}{2}$. Số lượng cạnh trung bình xuất hiện trên đồ thị ban đầu được tính bằng:
 
-$$E(M) = \text{edge\_prob} \times M_{\text{max}} = \text{edge\_prob} \times \frac{n(n-1)}{2}$$
+$$
+E(M) = \text{edge\_prob} \times M_{\text{max}} = \text{edge\_prob} \times \frac{n(n-1)}{2}
+$$
 
 ---
 
@@ -233,6 +235,25 @@ Sau 50 lần chạy, mô hình DAG có điểm BIC cao nhất (ít âm nhất) �
 | **ROC-AUC** | 0.7944 | 0.6910 | 0.8686 | 0.7667 | 0.9278 | 0.9220 |
 | **PR-AUC** | 0.8238 | 0.5224 | 0.8886 | 0.5421 | 0.9070 | 0.9371 |
 
+<p align="center">
+    <img width="850" height="652" alt="image" src="https://github.com/user-attachments/assets/b25c1d78-e3d1-48d2-b347-bdc7fe9fa9ef" />
+<br>
+  <em></b> Phân phối xác suất của toàn mạng --- Australian Credit</em>
+</p>
+
+
+<p align="center">
+<img width="1042" height="808" alt="image" src="https://github.com/user-attachments/assets/96c51994-5239-4644-a50c-fb2a898a5c1f" />
+<br>
+  <em></b> Phân phối xác suất của toàn mạng --- German Credit</em>
+</p>
+
+<p align="center">
+<img width="1081" height="847" alt="image" src="https://github.com/user-attachments/assets/7a3ab662-ff7f-478a-ae8f-1845aec36135" />
+<br>
+  <em></b> Phân phối xác suất của toàn mạng --- Lending Club</em>
+</p>
+
 
 #### Phân tích Đường cong ROC, Ngưỡng Tối ưu và Decision Curve Analysis (DCA) — Australian Credit
 
@@ -243,7 +264,7 @@ Sau 50 lần chạy, mô hình DAG có điểm BIC cao nhất (ít âm nhất) �
 </p>
 
 <p align="center">
-  <img src="[image/roc_dca/dca_au.png](https://github.com/user-attachments/assets/08401c18-c7ce-4780-a9eb-4d574e90a8be)" alt="DCA Curve Australian Credit" width="75%">
+  <img src="https://github.com/user-attachments/assets/08401c18-c7ce-4780-a9eb-4d574e90a8be" alt="DCA Curve Australian Credit" width="75%">
   <br>
   <em>Đồ thị ba ngưỡng quyết định tối ưu trên DCA — Australian Credit</em>
 </p>
